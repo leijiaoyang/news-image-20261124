@@ -9,10 +9,10 @@ Entry for the make.fun bounty
 ($100, 50 places paid, ends 26 November 2026 00:00 UTC).
 
 The entry is a newspaper front page that sums up the world's news of
-Tuesday 24 November 2026 in one image. `main.py` (Python 3.13) copies the
-image held in this repository (`entry.png`, 1024x1024, under 1 MiB) to
-`/output/entry.png`. It needs no network, and both runs write identical
-bytes.
+Tuesday 24 November 2026 in one image. `main.py` (Python 3.13) copies
+the image held in this repository (`entry.png`, 1024x1024, under
+1 MiB) to `/output/entry.png`. It needs no network, and both runs
+write identical bytes.
 
 ## Run it
 
@@ -26,18 +26,50 @@ python3 main.py
 
 ## The day's news in the image
 
-- **Huang back at Nvidia** — Nvidia's board reinstates Jensen Huang as
-  chief executive, 11 days after he resigned; shares surge 31% and Wall
-  Street rallies.
-- **Houthis strike Riyadh** — Yemen's Houthis launch fresh missile
-  strikes on the Saudi capital; Saudi-led strikes on Hodeida kill 17.
-- **Kyiv toll rises to 14** — Russian strikes on the Kyiv region kill at
-  least 14 people.
-- **States sue Musk over Grok** — US states sue Elon Musk's companies
-  over sexualised images made with the AI chatbot Grok.
-- Foot strip: Rep. Jimmy Gomez resigns from Congress; 6.7-magnitude
-  quake hits Peru; Trump pledges a 10% credit-card interest cap; Gaza
-  contamination warning; World Chess Championship opens in Geneva.
+Every story below happened, or was first reported, on Tuesday
+24 November 2026. The four leads:
+
+- **Russian death toll nears 500,000** — New hacked Rosstat
+  registry data puts Russian-side deaths in the Ukraine war at
+  about 470,000 and rising. (Japan Times, The Insider)
+- **Russia's space nuke alarm** — Allies warn a satellite dubbed
+  Sputnik-S, built to carry a nuclear warhead, could be launched
+  as soon as December; NATO vows to defend space. (Japan Times,
+  Bloomberg, Free Malaysia Today)
+- **Trump speeds up executions** — Trump orders the Justice
+  Department to seek the death penalty for child killers, rapists
+  and traffickers who kill, and to expedite federal executions.
+  (AP/AFP, 24 Nov)
+- **China spy gets death sentence** — China sentences an official
+  surnamed Ma to death for spying for a foreign country; he sent
+  over 100 reports including 35 state secrets for more than
+  1m yuan. (AP, Reuters)
+
+Eight more stories fill the "More of the day" columns: Trump
+offering the Philippines $2.4bn for self-defence; an India–EU
+free-trade pact to be signed on 16 December; the teenager behind
+the GTA VI hack getting a 7-year sentence; Trump moving to penalise
+US firms building AI data centres abroad; Denmark accusing Russian
+intelligence of plotting to kill a US Ukrainian; North Korea
+threatening to close its Swiss diplomatic office; Nepal's PM in
+Delhi for economic and energy talks; and thousands evacuated from
+a UK concert after an "unknown substance" was released.
+
+The foot strip records three more 24 November developments:
+Zelensky warning that Russia is planning new strikes; Moscow
+accusing Estonia of acts near open war; and storms threatening
+messy Thanksgiving travel.
+
+## How it was drawn
+
+The page is typeset by a script (`build_frontpage.py`, kept with
+the build notes) using PIL and real fonts, over four sepia
+engraving-style photographs made for this entry. No words in the
+image come from a picture generator, so nothing can be garbled.
+The layout follows the high-scoring format: masthead naming the
+weekday and the day, a two-by-two photo grid with a factual caption
+under each headline, a dense "More of the day" section, and a
+footer strip — 15 stories in total.
 
 ## License
 

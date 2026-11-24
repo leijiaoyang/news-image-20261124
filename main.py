@@ -1,49 +1,63 @@
-"""Entry for the make.fun bounty "Sum up 24 November's world news in one image"
-(https://make.fun/bounty/news-image-20261124).
+"""24 November 2026 in one picture.
 
-The entry image is a newspaper front page summarising the world's news of
-Tuesday 24 November 2026, made for this bounty and held in this repository as
-entry.png (1024x1024, under 1 MiB). Its four stories, checked against the
-day's reporting:
+Entry program for make.fun's "Sum up 24 November's world news in
+one image" bounty (https://make.fun/bounty/news-image-20261124).
 
-  - Nvidia reinstates Jensen Huang as chief executive, 11 days after he
-    resigned; shares surge 31% and Wall Street rallies.
-  - Yemen's Houthis launch fresh missile strikes on the Saudi capital
-    Riyadh; Saudi-led strikes on Hodeida in Yemen kill 17.
-  - Russian strikes on the Kyiv region kill at least 14 people.
-  - US states sue Elon Musk's companies over sexualised images made
-    with the AI chatbot Grok.
+The repository ships a single front-page image, entry.png, 1024 by
+1024 pixels and under a megabyte, drawn for Tuesday 24 November
+2026. The masthead names the day; four lead stories fill a two-by-
+two grid, each with a photograph and a one-line factual caption; a
+further eight stories run under "More of the day"; three more sit in
+the foot strip. The leads:
 
-The strip at the foot also notes Rep. Jimmy Gomez resigning from
-Congress, the 6.7-magnitude Peru earthquake, Trump's pledge to cap
-credit-card interest at 10%, the Gaza contamination warning, and the
-World Chess Championship opening in Geneva.
+- Hacked registry data puts the Russian death toll in Ukraine near
+  500,000.
+- Allies warn Russia's Sputnik-S satellite could carry a nuclear
+  warhead into orbit as soon as December.
+- Trump orders federal executions to be sped up.
+- China sentences an official to death for spying for a foreign
+  country.
 
-The program copies entry.png byte-for-byte to /output/entry.png, so both
-runs write identical bytes and no network is needed.
+Running this program needs no network. It checks that entry.png is
+a real PNG, copies it to /output/entry.png, and confirms the copy
+is byte-for-byte the same, so a second run writes the same bytes.
 """
 
-import os
-import shutil
+import hashlib
+import sys
+from pathlib import Path
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, "entry.png")
-DST = "/output/entry.png"
-PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+ENTRY = Path(__file__).resolve().parent / "entry.png"
+TARGET = Path("/output/entry.png")
+MAGIC = bytes((0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A))
+MAX_BYTES = 1_048_576
 
 
-def main() -> None:
-    with open(SRC, "rb") as fh:
-        head = fh.read(len(PNG_SIGNATURE))
-    if head != PNG_SIGNATURE:
-        raise SystemExit("entry.png is not a PNG file")
-    os.makedirs("/output", exist_ok=True)
-    shutil.copyfile(SRC, DST)
-    with open(SRC, "rb") as src, open(DST, "rb") as dst:
-        if src.read() != dst.read():
-            raise SystemExit("copied entry.png does not match the source")
-    print("wrote %s (%d bytes)" % (DST, os.path.getsize(DST)))
+def is_png(path: Path) -> bool:
+    with path.open("rb") as handle:
+        return handle.read(len(MAGIC)) == MAGIC
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main() -> int:
+    if not is_png(ENTRY):
+        print("entry.png is not a PNG file", file=sys.stderr)
+        return 1
+    if ENTRY.stat().st_size > MAX_BYTES:
+        print("entry.png is over the 1 MiB limit", file=sys.stderr)
+        return 1
+    TARGET.parent.mkdir(parents=True, exist_ok=True)
+    TARGET.write_bytes(ENTRY.read_bytes())
+    if sha256(TARGET) != sha256(ENTRY):
+        print("copied entry.png does not match the source", file=sys.stderr)
+        return 1
+    print("wrote %s (%d bytes, sha256 %s)"
+          % (TARGET, TARGET.stat().st_size, sha256(TARGET)))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
